@@ -26,9 +26,6 @@ public class Portfolio {
     }
 
     // Setters:
-    public void setValueCurrentlyInvested(double valueCurrentlyInvested) {
-        this.valueCurrentlyInvested = valueCurrentlyInvested;
-    }
 
     public void setBalance(double balance) {
         this.balance = balance;
@@ -98,6 +95,10 @@ public class Portfolio {
     }
 
 
+    // MODIFIES: this
+    // EFFECTS: adds the amount invested in stock to portfolio balance.
+    //              - sets amount invested in stock to 0
+    //              - removes stock from portfolio
     public void sellStock(Stock stock) {
         double amountInvested = stock.getCurrentInvestmentWorth();
         stock.setCurrentInvestmentWorth(0);

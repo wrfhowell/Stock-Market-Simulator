@@ -19,11 +19,10 @@ class StockTest {
         testStock.setSymbol("AAPL");
     }
 
-//    @Test
-//    void testTickerNotCapLetters() {
-//        testStock.setSymbol("a2234");
-//        testStock.ticker();
-//    }
+    @Test
+    void testGetDaysToInvest() {
+        assertEquals(1, testStock.getDaysToInvest());
+    }
 
     @Test
     void testAddInvestmentAmount() {

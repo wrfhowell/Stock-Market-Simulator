@@ -11,7 +11,7 @@ public class Stock {
     private double initialInvestment;
     private double sharesBought;
     private int daysToInvest;
-    private int risk; //from 1 - 10, 10 being riskiest
+    private int risk; //from 1 - 5, 5 being riskiest
 //    private int publicPerception; // from 1- 10, 10 being the best. MAY add later
 //    private boolean positiveNews; // true if positive news. MAY add later
 //    private boolean negativeNews; // false if negative news MAY add later
@@ -43,9 +43,6 @@ public class Stock {
         return daysToInvest;
     }
 
-    public int getRisk() {
-        return this.risk;
-    }
 
     //Setters:
     public void setSymbol(String symbol) {
@@ -82,10 +79,16 @@ public class Stock {
         input = new Scanner(System.in);
     }
 
+    // MODIFIES: this
+    // EFFECTS: increases current investment in stock by inputted amount
     public void addInvestmentAmount(double amount) {
         currentInvestmentWorth += amount;
     }
 
+    // MODIFIES: this
+    // EFFECTS: invests stock for amount of days
+    //              - takes into account risk (riskier has more potential for more loss or more gain)
+    //              - max stock price cannot surpass marketCap
     public void investIndividualStock() {
         sharesBought = currentInvestmentWorth / stockPriceCurrent;
         initialInvestment = currentInvestmentWorth;
@@ -109,6 +112,7 @@ public class Stock {
 
     }
 
+    // EFFECTS: returns a riskFactor based on the amount of risk the stock has. More risk factor for riskier stock
     public double getRiskFactor() {
         if (risk == 1) {
             return 0.05;

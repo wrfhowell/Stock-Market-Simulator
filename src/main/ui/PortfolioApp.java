@@ -87,7 +87,7 @@ public class PortfolioApp {
             System.out.println("Cannot deposit negative amount...\n");
         }
 
-        printBalance(portfolio);
+        returnPortfolioBalance();
     }
 
 
@@ -117,7 +117,7 @@ public class PortfolioApp {
     private void addStock() {
         Stock stock = new Stock();
 
-        ticker(stock);
+        tickerMenu(stock);
 
         stockPrice(stock);
 
@@ -128,17 +128,17 @@ public class PortfolioApp {
         portfolio.addStock(stock);
     }
 
-    private void printBalance(Portfolio portfolio) {
-        System.out.printf("Portfolio balance $%.2f\n", this.portfolio.getBalance());
-    }
-
+    // EFFECT: prints out current free balance of portfolio (not including money invested)
     private void returnPortfolioBalance() {
         DecimalFormat df = new DecimalFormat("#.##");
         System.out.println("Portfolio balance: $" + df.format(portfolio.getBalance()));
     }
 
     // REQUIRES: ticker must not already be used
-    public void ticker(Stock stock) {
+    // EFFECTS: prompts user for stock ticker
+    //              - keeps asking if it isn't a string of all capital letters
+    //              - sets stock ticker to the inputted string
+    public void tickerMenu(Stock stock) {
         System.out.println("What is the stock ticker? (eg. AAPL)");
         String ticker = input.next();
 
@@ -149,6 +149,9 @@ public class PortfolioApp {
         stock.setSymbol(ticker);
     }
 
+    // EFFECTS: asks user for stock price
+    //              - accepts double only if it is >= 0
+    //              - sets stockprice to inputted number
     public void stockPrice(Stock stock) {
         System.out.println("What is the current stock price? (eg. AAPL: 135.37)");
         double stockPrice = input.nextDouble();
@@ -161,6 +164,9 @@ public class PortfolioApp {
         stock.setStockPriceCurrent(stockPrice);
     }
 
+    //EFFECTS: asks user for marketCap of stock
+    //               - doesn't accept until positive number has been inputted
+    //               - sets stock market cap to inputted value
     public void marketCap(Stock stock) {
         System.out.println("What is the market cap of this stock? (eg. AAPL: 2723000000000");
         double marketCap = input.nextDouble();
@@ -173,6 +179,9 @@ public class PortfolioApp {
         stock.setMarketCap(marketCap);
     }
 
+    //EFFECTS: asks user for how risk the stock is
+    //               - doesn't accept unless value is between 1 and 5 inclusive
+    //               - sets stock risk value to inputted value
     public void riskFactor(Stock stock) {
         System.out.println(
                 "How risky is the stock from 1 - 5? (eg. 5 is riskiest, could lose or gain the most)");
@@ -186,6 +195,14 @@ public class PortfolioApp {
         stock.setRisk(riskFactor);
     }
 
+    // MODIFIES: this
+    // EFFECTS: For each stock in portfolio:
+    //              - asks for how much user would like to invest
+    //              - takes user input only if portfolio balance is larger than investment amount
+    //              - sets investment amount to inputted amount and subtracts that amount from portfolio balance
+    //          Asks how many days to invest
+    //              -only accepts positive number
+    //              - sets each stock to be invested for that maount of days
     private void investMenu() {
         for (Stock i : portfolio.getPortfolioList()) {
             System.out.println("How much would you like to invest in stock " + i.getSymbol() + "?");
@@ -209,6 +226,7 @@ public class PortfolioApp {
         portfolio.investStocksForDays(days);
     }
 
+    // EFFECTS: Prints result of latest investing cycle
     private void printInvestingOutcome() {
         DecimalFormat df = new DecimalFormat("#.##");
         for (Stock i : portfolio.getPortfolioList()) {
@@ -223,6 +241,9 @@ public class PortfolioApp {
         }
     }
 
+    // EFFECTS: user prompt for investing more into an individual stock
+    //                 - gets user input
+    //                 - adds that to current amount invested
     private void investMoreInExistingStock() {
         System.out.println("Enter ticker of stock you would like to invest more in: ");
         String ticker = input.next();

@@ -23,19 +23,20 @@ For each stock a user will indicate:
 - Risk from 1 - 5 (more risk has potential for greater wins or greater losses)
 - Amount of time you want to invest (eg. amount of days)
 - Quantity (eg. how much money to invest)
-- Current public perception 1-5 (1 being bad, 5 being good)
-
-An example of text with **bold** and *italic* fonts.  Note that the IntelliJ markdown previewer doesn't seem to render 
+- Current public perception 1-5 (1 being bad, 5 being good)  -- not yet implemented
 
 
 ---
 
 ## User Stories
 
-- As a user, I want to be able to add money to my account
-- As a user, I want to add or remove a stock to my portfolio
-- As a user, I want to input factors for that stock
+- As a user, I want to be able to add money to my portfolio
+- As a user, I want to be able to add a stock to my portfolio. That stock should contain information
+  about stock price, market cap and other important factors
+- As a user, I want to be able to invest money into that stock, and then let it invest for a certain amount of days to
+  see the outcome of if I have gainer or lost money in the investment
 - As a user, I want to view how my portfolio is performing (overall and individual stocks)
+- As a user, I want to be able to sell and remove a stock from my portfolio
 
 #### **Example:**
 
@@ -46,12 +47,10 @@ I want to invest in Apple:
 - I set the stock symbol to AAPL
 - I set the current price to 136.83 
 - I set the risk value to a 3 (this is based on your opinion)
-- I set the amount I want to invest to $5000
-- I set public perception to a 5 (great public perception currently)
-- I set interest in stock to a 4 (decent amount of attention) 
 
 
-- I want to invest my portfolio, I hit invest and set time frame to 30 days
+- I want to invest my portfolio, I hit invest, set the amount of money I want to invest in each stock and 
+  set time frame to 30 days
 - Now I check portfolio, it is now worth $5300
-- I can check individaul stock performance
+- I can check individual stock performance
     - Only stock is apple, it went from $5000 - $5300

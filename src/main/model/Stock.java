@@ -2,6 +2,9 @@ package model;
 
 import java.util.Scanner;
 
+// Class stock represents a stock by storing its symbol, current stock price, stock price when bought, amount of money
+// invested in the stock, market cap of stock, how risky the stock is, amount of share bought in stock, and how many
+// days the user would like to invest this stock
 public class Stock {
     //Fields:
     private String symbol;
@@ -126,6 +129,4 @@ public class Stock {
             return 0.5;
         }
     }
-
-
 }

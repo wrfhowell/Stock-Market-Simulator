@@ -4,6 +4,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Class portfolio represents a stock market portfolio in which a user can house a balance, multiple stocks and get
+// their overall value (combination of balance and current investments). Methods can be used to change manipulate
+// the balance and stocks present in portfolio
 public class Portfolio {
 
     // Fields:

@@ -7,6 +7,8 @@ import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.Scanner;
 
+// This class is the console based application for the stock market simulator. This class will act as a menu in which
+// the user can select what they want to do with their stock portfolio
 public class PortfolioApp {
     private Portfolio portfolio;
     private Scanner input;

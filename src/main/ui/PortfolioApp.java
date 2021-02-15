@@ -94,9 +94,9 @@ public class PortfolioApp {
     // MODIFIES: this
     // EFFECTS: call invest methods on portfolio. Invests amount specified for each stock for inputted number of days
     private void investPortfolio() {
-        portfolio.invest();
+        investMenu();
 
-        portfolio.printInvestingOutcome();
+        printInvestingOutcome();
     }
 
     // MODIFIES: this
@@ -115,19 +115,123 @@ public class PortfolioApp {
     // MODIFIES: THIS
     // EFFECTS: will add stock with all relevant fields to portfolio
     private void addStock() {
-        portfolio.addStock();
+        Stock stock = new Stock();
+
+        ticker(stock);
+
+        stockPrice(stock);
+
+        marketCap(stock);
+
+        riskFactor(stock);
+
+        portfolio.addStock(stock);
     }
 
     private void printBalance(Portfolio portfolio) {
-        System.out.printf("Portfolio balance $%.2f\n", this.portfolio.getCash());
-    }
-
-    private void investMoreInExistingStock() {
-        portfolio.investMoreInExistingStock();
+        System.out.printf("Portfolio balance $%.2f\n", this.portfolio.getBalance());
     }
 
     private void returnPortfolioBalance() {
         DecimalFormat df = new DecimalFormat("#.##");
-        System.out.println("Portfolio balance: $" + df.format(portfolio.getCash()));
+        System.out.println("Portfolio balance: $" + df.format(portfolio.getBalance()));
+    }
+
+    // REQUIRES: ticker must not already be used
+    public void ticker(Stock stock) {
+        System.out.println("What is the stock ticker? (eg. AAPL)");
+        String ticker = input.next();
+
+        while (!ticker.matches("[A-Z]+")) {
+            System.out.println("Must be all capital letters.");
+            ticker = input.next();
+        }
+        stock.setSymbol(ticker);
+    }
+
+    public void stockPrice(Stock stock) {
+        System.out.println("What is the current stock price? (eg. AAPL: 135.37)");
+        double stockPrice = input.nextDouble();
+
+        while (stockPrice < 0) {
+            System.out.println("Input positive number.");
+            stockPrice = input.nextDouble();
+        }
+
+        stock.setStockPriceCurrent(stockPrice);
+    }
+
+    public void marketCap(Stock stock) {
+        System.out.println("What is the market cap of this stock? (eg. AAPL: 2723000000000");
+        double marketCap = input.nextDouble();
+
+        while (marketCap < 0) {
+            System.out.println("Input positive number.");
+            marketCap = input.nextDouble();
+        }
+
+        stock.setMarketCap(marketCap);
+    }
+
+    public void riskFactor(Stock stock) {
+        System.out.println(
+                "How risky is the stock from 1 - 5? (eg. 5 is riskiest, could lose or gain the most)");
+        int riskFactor = input.nextInt();
+
+        while (riskFactor < 1 | riskFactor > 5) {
+            System.out.println("Input integer from between 1 and 5.");
+            riskFactor = input.nextInt();
+        }
+
+        stock.setRisk(riskFactor);
+    }
+
+    private void investMenu() {
+        for (Stock i : portfolio.getPortfolioList()) {
+            System.out.println("How much would you like to invest in stock " + i.getSymbol() + "?");
+
+            double amount = input.nextDouble();
+
+            if (amount > portfolio.getBalance()) {
+                System.out.println("Not enough money in portfolio");
+                return;
+            }
+
+            i.setCurrentInvestmentWorth(amount);
+            portfolio.subtractBalance(amount);
+        }
+        System.out.println("For how many days would you like to invest?");
+        int days = input.nextInt();
+        while (days < 0) {
+            System.out.println("Please input a positive number for amount of days to invest:");
+            days = input.nextInt();
+        }
+        portfolio.investStocksForDays(days);
+    }
+
+    private void printInvestingOutcome() {
+        DecimalFormat df = new DecimalFormat("#.##");
+        for (Stock i : portfolio.getPortfolioList()) {
+            System.out.println("Stock " + i.getSymbol() + " outcome:");
+            System.out.println("Invested for " + i.getDaysToInvest() + " days.");
+            System.out.println("Previous stock price: $" + df.format(i.getStockPricePrevious()));
+            System.out.println("Current stock price: $" + df.format(i.getStockPriceCurrent()));
+            System.out.println("Initial investment: $" + df.format(i.getInitialInvestment()));
+            System.out.println("Current investment worth: $" + df.format(i.getCurrentInvestmentWorth()));
+            System.out.println("Gains/losses: " + df.format(i.getCurrentInvestmentWorth() - i.getInitialInvestment()));
+            System.out.println("");
+        }
+    }
+
+    private void investMoreInExistingStock() {
+        System.out.println("Enter ticker of stock you would like to invest more in: ");
+        String ticker = input.next();
+
+        Stock stock = portfolio.checkForTicker(ticker);
+
+        System.out.println("How much would you like to invest?");
+        double amount = input.nextInt();
+
+        stock.addInvestmentAmount(amount);
     }
 }

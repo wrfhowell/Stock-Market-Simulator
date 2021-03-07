@@ -1,11 +1,13 @@
 package model;
 
-import java.util.Scanner;
+import org.json.JSONObject;
+import persistence.Writable;
+
 
 // Class stock represents a stock by storing its symbol, current stock price, stock price when bought, amount of money
 // invested in the stock, market cap of stock, how risky the stock is, amount of share bought in stock, and how many
 // days the user would like to invest this stock
-public class Stock {
+public class Stock implements Writable {
     //Fields:
     private String symbol;
     private double stockPriceCurrent;
@@ -19,7 +21,6 @@ public class Stock {
 //    private boolean positiveNews; // true if positive news. MAY add later
 //    private boolean negativeNews; // false if negative news MAY add later
     private double marketCap; //
-    private Scanner input;
 
     //Getters:
     public String getSymbol() {
@@ -36,6 +37,18 @@ public class Stock {
 
     public double getCurrentInvestmentWorth() {
         return currentInvestmentWorth;
+    }
+
+    public double getSharesBought() {
+        return sharesBought;
+    }
+
+    public int getRisk() {
+        return risk;
+    }
+
+    public double getMarketCap() {
+        return marketCap;
     }
 
     public double getInitialInvestment() {
@@ -79,7 +92,28 @@ public class Stock {
     //Methods:
 
     public Stock() {
-        input = new Scanner(System.in);
+        this.symbol = "";
+        this.stockPriceCurrent = 0.00;
+        this.stockPricePrevious = 0.00;
+        this.currentInvestmentWorth = 0.00;
+        this.initialInvestment = 0.00;
+        this.sharesBought = 0;
+        this.daysToInvest = 0;
+        this.risk = 1;
+        this.marketCap = 10000000;
+    }
+
+    public Stock(String symbol, double stockPriceCurrent, double stockPricePrevious, double currentInvestmentWorth,
+                 double initialInvestment, double sharesBought, int daysToInvest, int risk, double marketCap) {
+        this.symbol = symbol;
+        this.stockPriceCurrent = stockPriceCurrent;
+        this.stockPricePrevious = stockPricePrevious;
+        this.currentInvestmentWorth = currentInvestmentWorth;
+        this.initialInvestment = initialInvestment;
+        this.sharesBought = sharesBought;
+        this.daysToInvest = daysToInvest;
+        this.risk = risk;
+        this.marketCap = marketCap;
     }
 
     // MODIFIES: this
@@ -110,6 +144,10 @@ public class Stock {
 
             stockPriceCurrent = (Math.random() * (max - min) + min);
 
+            if (stockPriceCurrent < 0) {
+                stockPriceCurrent = 0.00;
+            }
+
             currentInvestmentWorth = stockPriceCurrent * sharesBought;
         }
 
@@ -128,5 +166,20 @@ public class Stock {
         } else {
             return 0.5;
         }
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("symbol", symbol);
+        json.put("stock price current", stockPriceCurrent);
+        json.put("stock price previous", stockPricePrevious);
+        json.put("current investment worth", currentInvestmentWorth);
+        json.put("initial investment", initialInvestment);
+        json.put("shares bought", sharesBought);
+        json.put("days to invest", daysToInvest);
+        json.put("risk", risk);
+        json.put("market cap", marketCap);
+        return json;
     }
 }

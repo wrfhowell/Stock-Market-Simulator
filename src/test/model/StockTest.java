@@ -95,4 +95,17 @@ class StockTest {
                     testStock.getCurrentInvestmentWorth() >= 256);
         }
     }
+
+    @Test
+    void testInvestIndividualStockBelowZero() {
+        for (int i = 0; i < 20; i++) {
+            runBefore();
+
+            testStock.setDaysToInvest(1);
+            testStock.setStockPriceCurrent(-100000.00);
+            testStock.investIndividualStock();
+
+            assertEquals(0, testStock.getStockPriceCurrent());
+        }
+    }
 }

@@ -6,15 +6,27 @@ import model.Stock;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.Scanner;
+import persistence.JsonReader;
+import persistence.JsonWriter;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 
 // This class is the console based application for the stock market simulator. This class will act as a menu in which
 // the user can select what they want to do with their stock portfolio
 public class PortfolioApp {
+    private static final String JSON_STORE = "./data/portfolio.json";
+
     private Portfolio portfolio;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
 
-    public PortfolioApp() {
+    public PortfolioApp() throws FileNotFoundException {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runPortfolio();
     }
 
@@ -32,7 +44,7 @@ public class PortfolioApp {
             command = command.toLowerCase(Locale.ROOT);
 
             // q is quit
-            if (command.equals("7")) {
+            if (command.equals("9")) {
                 keepGoing = false;
             } else {
                 processCommand(command);
@@ -55,6 +67,30 @@ public class PortfolioApp {
             investPortfolio();
         } else if (command.equals("6")) {
             returnPortfolioBalance();
+        } else if (command.equals("7")) {
+            saveCurrentPortfolio();
+        } else if (command.equals("8")) {
+            loadPortfolio();
+        }
+    }
+
+    private void loadPortfolio() {
+        try {
+            portfolio = jsonReader.read();
+            System.out.println("Loaded portfolio saved at " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
+
+    private void saveCurrentPortfolio() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(portfolio);
+            jsonWriter.close();
+            System.out.println("Saved portfolio to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
         }
     }
     // MODIFIES: this
@@ -74,7 +110,9 @@ public class PortfolioApp {
         System.out.println("\t[4]: Invest More in Current Stock");
         System.out.println("\t[5]: Invest in Stocks");
         System.out.println("\t[6]: Check Portfolio Balance");
-        System.out.println("\t[7]: End Simulation");
+        System.out.println("\t[7]: Save Current Portfolio");
+        System.out.println("\t[8]: Load Portfolio");
+        System.out.println("\t[9]: End Simulation");
     }
 
     // MODIFIES: this
@@ -252,9 +290,11 @@ public class PortfolioApp {
 
         Stock stock = portfolio.checkForTicker(ticker);
 
-        System.out.println("How much would you like to invest?");
-        double amount = input.nextInt();
+        if (!(stock == null)) {
+            System.out.println("How much would you like to invest?");
+            double amount = input.nextInt();
 
-        stock.addInvestmentAmount(amount);
+            stock.addInvestmentAmount(amount);
+        }
     }
 }

@@ -38,6 +38,10 @@ For each stock a user will indicate:
 - As a user, I want to view how my portfolio is performing (overall and individual stocks)
 - As a user, I want to be able to sell and remove a stock from my portfolio
 
+#### Persistence Stories:
+- As a user, I want to be able to save my current stock portfolio
+- As a user, I want to be able to load a previous stock portfolio
+
 #### **Example:**
 
 I want to invest in Apple:

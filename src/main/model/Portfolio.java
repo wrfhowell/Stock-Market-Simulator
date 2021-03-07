@@ -1,19 +1,21 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 // Class portfolio represents a stock market portfolio in which a user can house a balance, multiple stocks and get
 // their overall value (combination of balance and current investments). Methods can be used to change manipulate
 // the balance and stocks present in portfolio
-public class Portfolio {
+public class Portfolio implements Writable {
 
     // Fields:
-    private double valueCurrentlyInvested;
     private double balance;
+    private double valueCurrentlyInvested;
     ArrayList<Stock> portfolio;
-    private Scanner input;
 
     // Getters:
     public double getValueCurrentlyInvested() {
@@ -40,7 +42,12 @@ public class Portfolio {
         this.balance = 0.00;
         this.valueCurrentlyInvested = 0.00;
         portfolio = new ArrayList<>();
-        input = new Scanner(System.in);
+    }
+
+    public Portfolio(double balance, double valueCurrentlyInvested) {
+        this.balance = balance;
+        this.valueCurrentlyInvested = valueCurrentlyInvested;
+        portfolio = new ArrayList<>();
     }
 
     // REQUIRES: amount >= 0
@@ -109,5 +116,25 @@ public class Portfolio {
         this.balance += amountInvested;
 
         portfolio.remove(stock);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("balance", balance);
+        json.put("value currently invested", valueCurrentlyInvested);
+        json.put("portfolio", portfolioToJson());
+        return json;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray portfolioToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Stock t : portfolio) {
+            jsonArray.put(t.toJson());
+        }
+
+        return jsonArray;
     }
 }

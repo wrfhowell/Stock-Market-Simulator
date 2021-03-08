@@ -128,7 +128,7 @@ public class Portfolio implements Writable {
     }
 
     // EFFECTS: returns things in this workroom as a JSON array
-    private JSONArray portfolioToJson() {
+    public JSONArray portfolioToJson() {
         JSONArray jsonArray = new JSONArray();
 
         for (Stock t : portfolio) {

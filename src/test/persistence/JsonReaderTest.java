@@ -43,8 +43,12 @@ class JsonReaderTest extends JsonTest {
             assertEquals(6000 , portfolio.getBalance());
             List<Stock> stockList = portfolio.getPortfolioList();
             assertEquals(2, stockList.size());
-            checkStock("AAPL", 532.3472160420449, 500, 1064.6944320840898, 1000, 2, 1, 2, 1.0E8, stockList.get(0));
-            checkStock("GOOGLE", 307.92382151849904, 250, 3695.0858582219885, 3000, 12, 1, 5, 2.0E7, stockList.get(0));
+            checkStock("AAPL", 532.3472160420449, 500,
+                    1064.6944320840898, 1000, 2,
+                    1, 2, 1.0E8, stockList.get(0));
+            checkStock("GOOGL", 307.92382151849904, 250,
+                    3695.0858582219885, 3000, 12, 1, 5,
+                    2.0E7, stockList.get(1));
         } catch (IOException e) {
             fail("Couldn't read from file");
         }

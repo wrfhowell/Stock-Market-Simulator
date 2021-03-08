@@ -1,5 +1,7 @@
 package model;
 
+import netscape.javascript.JSObject;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,13 +12,8 @@ class StockTest {
 
     @BeforeEach
     void runBefore() {
-        testStock = new Stock();
-        testStock.setCurrentInvestmentWorth(500);
-        testStock.setDaysToInvest(1);
-        testStock.setMarketCap(1000000);
-        testStock.setRisk(3);
-        testStock.setStockPriceCurrent(123);
-        testStock.setSymbol("AAPL");
+        testStock = new Stock("AAPL", 123, 123, 500,
+                500, (500 / 123), 1, 3, 1000000);
     }
 
     @Test
@@ -107,5 +104,20 @@ class StockTest {
 
             assertEquals(0, testStock.getStockPriceCurrent());
         }
+    }
+
+    @Test
+    void testToJson() {
+        JSONObject json = testStock.toJson();
+        assertEquals("AAPL", json.getString("symbol"));
+        assertEquals(123, json.getDouble("stock price current"));
+        assertEquals(123, json.getDouble("stock price previous"));
+        assertEquals(500, json.getDouble("current investment worth"));
+        assertEquals(500, json.getDouble("initial investment"));
+        assertEquals((500 / 123), json.getDouble("shares bought"));
+        assertEquals(1, json.getInt("days to invest"));
+        assertEquals(3, json.getInt("risk"));
+        assertEquals(1000000, json.getDouble("market cap"));
+
     }
 }

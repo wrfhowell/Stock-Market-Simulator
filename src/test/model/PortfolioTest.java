@@ -1,9 +1,12 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -198,5 +201,89 @@ public class PortfolioTest {
 
         assertEquals(500, testPortfolio.getBalance());
         assertEquals(0, testPortfolio.getPortfolioList().size());
+    }
+
+    @Test
+    void testToJsonNoStocks() {
+        testPortfolio.deposit(300);
+        JSONObject json = testPortfolio.toJson();
+        assertEquals(300, json.getDouble("balance"));
+        assertEquals(0, json.getDouble("value currently invested"));
+        assertTrue(json.getJSONArray("portfolio").isEmpty());
+    }
+
+    @Test
+    void testToJsonTwoStocks() {
+        testPortfolio.deposit(300);
+        Stock stock1 = new Stock("AAPL", 123, 123, 500,
+                500, (500 / 123), 1, 3, 1000000);
+        Stock stock2 = new Stock("GOOGL", 250, 250, 500,
+                500, 2, 0, 5, 3000000);
+        testPortfolio.addStock(stock1);
+        testPortfolio.addStock(stock2);
+
+        JSONObject json = testPortfolio.toJson();
+        assertEquals(300, json.getDouble("balance"));
+        assertEquals(0, json.getDouble("value currently invested"));
+
+        JSONArray stockList = json.getJSONArray("portfolio");
+
+        assertEquals(2, stockList.length());
+        assertEquals("AAPL", stockList.getJSONObject(0).getString("symbol"));
+        assertEquals("GOOGL", stockList.getJSONObject(1).getString("symbol"));
+    }
+
+    @Test
+    void testPortfolioToJsonOneStock() {
+        Stock stock1 = new Stock("AAPL", 123, 123, 500,
+                500, (500 / 123), 1, 3, 1000000);
+        testPortfolio.addStock(stock1);
+
+        JSONArray json = testPortfolio.portfolioToJson();
+
+        assertEquals(1, json.length());
+        assertEquals("AAPL", json.getJSONObject(0).getString("symbol"));
+        assertEquals(123, json.getJSONObject(0).getDouble("stock price current"));
+        assertEquals(123, json.getJSONObject(0).getDouble("stock price previous"));
+        assertEquals(500, json.getJSONObject(0).getDouble("current investment worth"));
+        assertEquals(500, json.getJSONObject(0).getDouble("initial investment"));
+        assertEquals((500 / 123), json.getJSONObject(0).getDouble("shares bought"));
+        assertEquals(1, json.getJSONObject(0).getInt("days to invest"));
+        assertEquals(3, json.getJSONObject(0).getInt("risk"));
+        assertEquals(1000000, json.getJSONObject(0).getDouble("market cap"));
+    }
+
+    @Test
+    void testPortfolioToJsonMultipleStock() {
+        Stock stock1 = new Stock("AAPL", 123, 123, 500,
+                500, (500 / 123), 1, 3, 1000000);
+        testPortfolio.addStock(stock1);
+
+        Stock stock2 = new Stock("GOOGL", 250, 250, 500,
+                500, 2, 0, 5, 3000000);
+        testPortfolio.addStock(stock2);
+
+        JSONArray json = testPortfolio.portfolioToJson();
+
+        assertEquals(2, json.length());
+        assertEquals("AAPL", json.getJSONObject(0).getString("symbol"));
+        assertEquals(123, json.getJSONObject(0).getDouble("stock price current"));
+        assertEquals(123, json.getJSONObject(0).getDouble("stock price previous"));
+        assertEquals(500, json.getJSONObject(0).getDouble("current investment worth"));
+        assertEquals(500, json.getJSONObject(0).getDouble("initial investment"));
+        assertEquals((500 / 123), json.getJSONObject(0).getDouble("shares bought"));
+        assertEquals(1, json.getJSONObject(0).getInt("days to invest"));
+        assertEquals(3, json.getJSONObject(0).getInt("risk"));
+        assertEquals(1000000, json.getJSONObject(0).getDouble("market cap"));
+
+        assertEquals("GOOGL", json.getJSONObject(1).getString("symbol"));
+        assertEquals(250, json.getJSONObject(1).getDouble("stock price current"));
+        assertEquals(250, json.getJSONObject(1).getDouble("stock price previous"));
+        assertEquals(500, json.getJSONObject(1).getDouble("current investment worth"));
+        assertEquals(500, json.getJSONObject(1).getDouble("initial investment"));
+        assertEquals(2, json.getJSONObject(1).getDouble("shares bought"));
+        assertEquals(0, json.getJSONObject(1).getInt("days to invest"));
+        assertEquals(5, json.getJSONObject(1).getInt("risk"));
+        assertEquals(3000000, json.getJSONObject(1).getDouble("market cap"));
     }
 }

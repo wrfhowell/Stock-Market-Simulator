@@ -1,0 +1,28 @@
+{
+  "balance": 6000,
+  "value currently invested": 4759.780290306078,
+  "portfolio": [
+    {
+      "stock price previous": 250,
+      "symbol": "GOOGL",
+      "shares bought": 12,
+      "current investment worth": 3695.0858582219885,
+      "days to invest": 1,
+      "risk": 5,
+      "initial investment": 3000,
+      "stock price current": 307.92382151849904,
+      "market cap": 2.0E7
+    },
+    {
+      "stock price previous": 500,
+      "symbol": "AAPL",
+      "shares bought": 2,
+      "current investment worth": 1064.6944320840898,
+      "days to invest": 1,
+      "risk": 2,
+      "initial investment": 1000,
+      "stock price current": 532.3472160420449,
+      "market cap": 1.0E8
+    }
+  ]
+}

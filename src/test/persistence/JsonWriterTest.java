@@ -9,6 +9,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Citation: note these tests are based on the CPSC 210 JsonSerializationDemo althought they have been
+// significantly modified
 class JsonWriterTest extends JsonTest {
     //NOTE TO CPSC 210 STUDENTS: the strategy in designing tests for the JsonWriter is to
     //write data to a file and then use the reader to read it back in and check that we
@@ -30,12 +32,12 @@ class JsonWriterTest extends JsonTest {
     void testWriterEmptyWorkroom() {
         try {
             Portfolio portfolio = new Portfolio(1000, 3000);
-            JsonWriter writer = new JsonWriter("./data/testWriterEmptyWorkroom.json");
+            JsonWriter writer = new JsonWriter("./data/testWriterEmptyPortfolio.json");
             writer.open();
             writer.write(portfolio);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterEmptyWorkroom.json");
+            JsonReader reader = new JsonReader("./data/testWriterEmptyPortfolio.json");
             portfolio = reader.read();
             assertEquals(1000, portfolio.getBalance());
             assertEquals(3000, portfolio.getValueCurrentlyInvested());
@@ -56,12 +58,12 @@ class JsonWriterTest extends JsonTest {
 
             portfolio.addStock(stock1);
             portfolio.addStock(stock2);
-            JsonWriter writer = new JsonWriter("./data/testWriterGeneralWorkroom.json");
+            JsonWriter writer = new JsonWriter("./data/testWriterGeneralPortfolio.json");
             writer.open();
             writer.write(portfolio);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterGeneralWorkroom.json");
+            JsonReader reader = new JsonReader("./data/testWriterGeneralPortfolio.json");
             portfolio = reader.read();
 
             assertEquals(4000, portfolio.getBalance());

@@ -4,12 +4,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
-import java.text.DecimalFormat;
+//import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 // Class portfolio represents a stock market portfolio in which a user can house a balance, multiple stocks and get
 // their overall value (combination of balance and current investments). Methods can be used to change manipulate
 // the balance and stocks present in portfolio
+
+// CITATION: Note the methods portfolioToJson and toJson are  modified versions of similar
+// methods found in the CPSC 210 JsonSerializationDemo project
 public class Portfolio implements Writable {
 
     // Fields:
@@ -127,7 +130,7 @@ public class Portfolio implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns things in this portfolio as a JSON array
     public JSONArray portfolioToJson() {
         JSONArray jsonArray = new JSONArray();
 

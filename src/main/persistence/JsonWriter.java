@@ -7,6 +7,9 @@ import org.json.JSONObject;
 import java.io.*;
 
 // Represents a writer that writes JSON representation of workroom to file
+
+// CITATION: JsonWriter is a significantly modified version of the same class found in
+// CPSC 210 JsonSerializationDemo
 public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writer;
@@ -25,7 +28,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of portfolio to file
     public void write(Portfolio portfolio) {
         JSONObject json = portfolio.toJson();
         saveToFile(json.toString(TAB));

@@ -15,6 +15,9 @@ import java.util.List;
 
 // This class is the console based application for the stock market simulator. This class will act as a menu in which
 // the user can select what they want to do with their stock portfolio
+
+// CITATION: Note the methods loadPortfolio and saveCurrentPortfolio are significantly modified versions of similar
+// methods found in the CPSC 210 JsonSerializationDemo project
 public class PortfolioApp {
     private static final String JSON_STORE = "./data/portfolio.json";
 
@@ -74,25 +77,7 @@ public class PortfolioApp {
         }
     }
 
-    private void loadPortfolio() {
-        try {
-            portfolio = jsonReader.read();
-            System.out.println("Loaded portfolio saved at " + JSON_STORE);
-        } catch (IOException e) {
-            System.out.println("Unable to read from file: " + JSON_STORE);
-        }
-    }
 
-    private void saveCurrentPortfolio() {
-        try {
-            jsonWriter.open();
-            jsonWriter.write(portfolio);
-            jsonWriter.close();
-            System.out.println("Saved portfolio to " + JSON_STORE);
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file: " + JSON_STORE);
-        }
-    }
     // MODIFIES: this
     // EFFECTS: initializes portfolio
 
@@ -295,6 +280,29 @@ public class PortfolioApp {
             double amount = input.nextInt();
 
             stock.addInvestmentAmount(amount);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads portfolio from file
+    private void loadPortfolio() {
+        try {
+            portfolio = jsonReader.read();
+            System.out.println("Loaded portfolio saved at " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
+
+    // EFFECTS: saves the portfolio to file in data folder
+    private void saveCurrentPortfolio() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(portfolio);
+            jsonWriter.close();
+            System.out.println("Saved portfolio to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
         }
     }
 }

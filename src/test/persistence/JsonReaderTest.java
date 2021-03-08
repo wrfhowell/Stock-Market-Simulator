@@ -10,6 +10,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Citation: note these tests are based on the CPSC 210 JsonSerializationDemo althought they have been
+// significantly modified
 class JsonReaderTest extends JsonTest {
 
     @Test

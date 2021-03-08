@@ -4,6 +4,8 @@ import model.Stock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// Citation: note this class is based on the CPSC 210 JsonSerializationDemo although it has been
+// significantly modified
 public class JsonTest {
     protected void checkStock(String symbol, double stockPriceCurrent, double stockPricePrevious,
                               double currentInvestmentWorth, double initialInvestment, double sharesBought,

@@ -33,14 +33,6 @@ public class Portfolio implements Writable {
         return this.portfolio;
     }
 
-    // Setters:
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    // Methods:
-
     public Portfolio() {
         this.balance = 0.00;
         this.valueCurrentlyInvested = 0.00;
@@ -52,6 +44,15 @@ public class Portfolio implements Writable {
         this.valueCurrentlyInvested = valueCurrentlyInvested;
         portfolio = new ArrayList<>();
     }
+
+    // Setters:
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    // Methods:
+
 
     // REQUIRES: amount >= 0
     // MODIFIES: this

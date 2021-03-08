@@ -62,7 +62,7 @@ public class JsonReader {
         }
     }
 
-    // MODIFIES: wr
+    // MODIFIES: portfolio
     // EFFECTS: parses thingy from JSON object and adds it to portfolio
     private void addStock(Portfolio portfolio, JSONObject jsonObject) {
         String symbol = jsonObject.getString("symbol");

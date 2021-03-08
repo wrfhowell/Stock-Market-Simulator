@@ -23,7 +23,32 @@ public class Stock implements Writable {
 //    private int publicPerception; // from 1- 10, 10 being the best. MAY add later
 //    private boolean positiveNews; // true if positive news. MAY add later
 //    private boolean negativeNews; // false if negative news MAY add later
-    private double marketCap; //
+    private double marketCap;
+
+    public Stock() {
+        this.symbol = "";
+        this.stockPriceCurrent = 0.00;
+        this.stockPricePrevious = 0.00;
+        this.currentInvestmentWorth = 0.00;
+        this.initialInvestment = 0.00;
+        this.sharesBought = 0;
+        this.daysToInvest = 0;
+        this.risk = 1;
+        this.marketCap = 10000000;
+    }
+
+    public Stock(String symbol, double stockPriceCurrent, double stockPricePrevious, double currentInvestmentWorth,
+                 double initialInvestment, double sharesBought, int daysToInvest, int risk, double marketCap) {
+        this.symbol = symbol;
+        this.stockPriceCurrent = stockPriceCurrent;
+        this.stockPricePrevious = stockPricePrevious;
+        this.currentInvestmentWorth = currentInvestmentWorth;
+        this.initialInvestment = initialInvestment;
+        this.sharesBought = sharesBought;
+        this.daysToInvest = daysToInvest;
+        this.risk = risk;
+        this.marketCap = marketCap;
+    }
 
     //Getters:
     public String getSymbol() {
@@ -93,31 +118,6 @@ public class Stock implements Writable {
     }
 
     //Methods:
-
-    public Stock() {
-        this.symbol = "";
-        this.stockPriceCurrent = 0.00;
-        this.stockPricePrevious = 0.00;
-        this.currentInvestmentWorth = 0.00;
-        this.initialInvestment = 0.00;
-        this.sharesBought = 0;
-        this.daysToInvest = 0;
-        this.risk = 1;
-        this.marketCap = 10000000;
-    }
-
-    public Stock(String symbol, double stockPriceCurrent, double stockPricePrevious, double currentInvestmentWorth,
-                 double initialInvestment, double sharesBought, int daysToInvest, int risk, double marketCap) {
-        this.symbol = symbol;
-        this.stockPriceCurrent = stockPriceCurrent;
-        this.stockPricePrevious = stockPricePrevious;
-        this.currentInvestmentWorth = currentInvestmentWorth;
-        this.initialInvestment = initialInvestment;
-        this.sharesBought = sharesBought;
-        this.daysToInvest = daysToInvest;
-        this.risk = risk;
-        this.marketCap = marketCap;
-    }
 
     // MODIFIES: this
     // EFFECTS: increases current investment in stock by inputted amount

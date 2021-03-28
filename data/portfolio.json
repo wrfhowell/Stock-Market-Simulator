@@ -1,28 +1,28 @@
 {
-    "balance": 5414500,
-    "value currently invested": 11323.246160599321,
+    "balance": 0,
+    "value currently invested": 0,
     "portfolio": [
         {
-            "stock price previous": 45,
-            "symbol": "SPY",
-            "shares bought": 222.22222222222223,
-            "current investment worth": 9152.649192454724,
-            "days to invest": 7,
-            "risk": 1,
-            "initial investment": 10000,
-            "stock price current": 41.186921366046256,
-            "market cap": 3.0E7
+            "stock price previous": 0,
+            "symbol": "AAPL",
+            "shares bought": 0,
+            "current investment worth": 0,
+            "days to invest": 0,
+            "risk": 4,
+            "initial investment": 0,
+            "stock price current": 135.32,
+            "market cap": 2.3432432234E10
         },
         {
-            "stock price previous": 104,
-            "symbol": "GOOGL",
-            "shares bought": 52.88461538461539,
-            "current investment worth": 2170.596968144597,
-            "days to invest": 7,
-            "risk": 4,
-            "initial investment": 5500,
-            "stock price current": 41.04401539764329,
-            "market cap": 4.0404004E8
+            "stock price previous": 0,
+            "symbol": "GME",
+            "shares bought": 0,
+            "current investment worth": 0,
+            "days to invest": 0,
+            "risk": 1,
+            "initial investment": 0,
+            "stock price current": 12,
+            "market cap": 2.3432432123123232E16
         }
     ]
 }

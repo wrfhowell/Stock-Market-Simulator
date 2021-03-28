@@ -20,6 +20,18 @@ public class Portfolio implements Writable {
     private double valueCurrentlyInvested;
     ArrayList<Stock> portfolio;
 
+    public Portfolio() {
+        this.balance = 0.00;
+        this.valueCurrentlyInvested = 0.00;
+        portfolio = new ArrayList<>();
+    }
+
+    public Portfolio(double balance, double valueCurrentlyInvested) {
+        this.balance = balance;
+        this.valueCurrentlyInvested = valueCurrentlyInvested;
+        portfolio = new ArrayList<>();
+    }
+
     // Getters:
     public double getValueCurrentlyInvested() {
         return valueCurrentlyInvested;
@@ -33,16 +45,20 @@ public class Portfolio implements Writable {
         return this.portfolio;
     }
 
-    public Portfolio() {
-        this.balance = 0.00;
-        this.valueCurrentlyInvested = 0.00;
-        portfolio = new ArrayList<>();
-    }
+    public String getStocksAsString() {
+        String stockString = "<html>";
 
-    public Portfolio(double balance, double valueCurrentlyInvested) {
-        this.balance = balance;
-        this.valueCurrentlyInvested = valueCurrentlyInvested;
-        portfolio = new ArrayList<>();
+        for (Stock stock: portfolio) {
+            stockString = stockString + "Stock: " + stock.getSymbol() + "<br/>";
+            stockString = stockString + "Current Stock Price: $" + stock.getStockPriceCurrent() + "<br/>";
+            stockString = stockString + "Stock Price Before Investing: $" + stock.getStockPricePrevious() + "<br/>";
+            stockString = stockString + "Current Amount Invested: $" + stock.getCurrentInvestmentWorth() + "<br/>";
+            stockString = stockString + "Initial Invested Amount: $" + stock.getInitialInvestment() + "<br/>";
+            stockString = stockString + "Amount of Shares: " + stock.getSharesBought() + "<br/>";
+            stockString = stockString + "Stock Risk (1-5): " + stock.getRisk() + "<br/>";
+            stockString = stockString + "Market Cap: $" + stock.getMarketCap() + "<br/><br/><br/>";
+        }
+        return stockString + "</html>";
     }
 
     // Setters:

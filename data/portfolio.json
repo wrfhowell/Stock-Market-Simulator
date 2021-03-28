@@ -1,28 +1,5 @@
 {
     "balance": 0,
     "value currently invested": 0,
-    "portfolio": [
-        {
-            "stock price previous": 0,
-            "symbol": "AAPL",
-            "shares bought": 0,
-            "current investment worth": 0,
-            "days to invest": 0,
-            "risk": 4,
-            "initial investment": 0,
-            "stock price current": 135.32,
-            "market cap": 2.3432432234E10
-        },
-        {
-            "stock price previous": 0,
-            "symbol": "GME",
-            "shares bought": 0,
-            "current investment worth": 0,
-            "days to invest": 0,
-            "risk": 1,
-            "initial investment": 0,
-            "stock price current": 12,
-            "market cap": 2.3432432123123232E16
-        }
-    ]
+    "portfolio": []
 }

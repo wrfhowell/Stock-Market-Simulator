@@ -20,7 +20,6 @@ import java.io.IOException;
 public class GUI extends JFrame implements ActionListener {
     private static final String JSON_STORE = "./data/portfolio.json";
     private Portfolio portfolio;
-    private Stock stock;
 
     private JPanel mainMenu;
     private JButton addMoneyButton;
@@ -41,9 +40,6 @@ public class GUI extends JFrame implements ActionListener {
     private JPanel viewStockMenu;
 
     private JLabel stockList;
-
-    private JsonWriter jsonWriter;
-    private JsonReader jsonReader;
 
 
     public GUI() {
@@ -251,14 +247,22 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void mainMenuActions(ActionEvent e) {
-        if (e.getActionCommand().equals("Add a New Stock")) {
-            addStockToPortfolioButtonPress();
-        } else if (e.getActionCommand().equals("View Current Stocks")) {
-            viewStocksActionButtonPress();
-        } else if (e.getActionCommand().equals("Save Current Portfolio")) {
-            savePortfolio();
-        } else if (e.getActionCommand().equals("Load Previous Portfolio")) {
-            loadPortfolio();
+        switch (e.getActionCommand()) {
+            case "Add a New Stock":
+                addStockToPortfolioButtonPress();
+                break;
+            case "View Current Stocks":
+                viewStocksActionButtonPress();
+                break;
+            case "Save Current Portfolio":
+                savePortfolio();
+                break;
+            case "Load Previous Portfolio":
+                loadPortfolio();
+                break;
+            case "Exit application":
+                System.exit(0);
+                break;
         }
     }
 
@@ -266,7 +270,7 @@ public class GUI extends JFrame implements ActionListener {
     // EFFECTS: loads portfolio from file
     private void loadPortfolio() {
         try {
-            jsonReader = new JsonReader(JSON_STORE);
+            JsonReader jsonReader = new JsonReader(JSON_STORE);
             portfolio = jsonReader.read();
             System.out.println("Loaded portfolio saved at " + JSON_STORE);
             stockList.setText(portfolio.getStocksAsString());
@@ -278,7 +282,7 @@ public class GUI extends JFrame implements ActionListener {
     // EFFECTS: saves the portfolio to file in data folder
     private void savePortfolio() {
         try {
-            jsonWriter = new JsonWriter(JSON_STORE);
+            JsonWriter jsonWriter = new JsonWriter(JSON_STORE);
             jsonWriter.open();
             jsonWriter.write(portfolio);
             jsonWriter.close();

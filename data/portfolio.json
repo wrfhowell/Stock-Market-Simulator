@@ -1,5 +1,5 @@
 {
-    "balance": 1500,
+    "balance": 2000,
     "value currently invested": 0,
     "portfolio": [
         {
@@ -8,10 +8,10 @@
             "shares bought": 0,
             "current investment worth": 0,
             "days to invest": 0,
-            "risk": 5,
+            "risk": 4,
             "initial investment": 0,
             "stock price current": 135.57,
-            "market cap": 2.3422222E7
+            "market cap": 2.34234234E8
         },
         {
             "stock price previous": 0,
@@ -19,10 +19,10 @@
             "shares bought": 0,
             "current investment worth": 0,
             "days to invest": 0,
-            "risk": 1,
+            "risk": 2,
             "initial investment": 0,
-            "stock price current": 25.34,
-            "market cap": 2.34222222E8
+            "stock price current": 12.37,
+            "market cap": 2.34234234E8
         }
     ]
 }

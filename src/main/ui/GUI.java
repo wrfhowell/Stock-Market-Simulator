@@ -101,7 +101,7 @@ public class GUI extends JFrame implements ActionListener {
         addMoneyButton = new JButton("Add Money to Portfolio Balance");
         addStockButton = new JButton("Add a New Stock");
         viewStocksButton = new JButton("View Current Stocks");
-        sellStockButton = new JButton("Sell a Stock");
+        sellStockButton = new JButton("Sell First Stock");
         investInStocksButton = new JButton("Invest in Your Stocks Now");
         savePortfolioButton = new JButton("Save Current Portfolio");
         loadPortfolioButton = new JButton("Load Previous Portfolio");
@@ -150,7 +150,7 @@ public class GUI extends JFrame implements ActionListener {
         viewStocksButton.setActionCommand("View Current Stocks");
 
         sellStockButton.addActionListener(this);
-        sellStockButton.setActionCommand("Sell a Stock");
+        sellStockButton.setActionCommand("Sell First Stock");
 
         investInStocksButton.addActionListener(this);
         investInStocksButton.setActionCommand("Invest in Your Stocks Now");
@@ -178,7 +178,7 @@ public class GUI extends JFrame implements ActionListener {
     // REQUIRES:
     // MODIFIES: this
     // EFFECTS: initializes the menu for adding balance to portfolio
-    //             - creates Jpanel, labels and buttons
+    //             - creates JPanel, labels and buttons
     private void initializeBalanceMenu() {
         balanceMenu = new JPanel();
 
@@ -210,7 +210,7 @@ public class GUI extends JFrame implements ActionListener {
     // REQUIRES:
     // MODIFIES: this
     // EFFECTS: intializes menu for investing in the current stocks
-    //              - creates jpanel, fields, and buttons
+    //              - creates jp anel, fields, and buttons
     public void initializeInvestInStocks() {
         investStocksMenu = new JPanel();
 
@@ -334,7 +334,7 @@ public class GUI extends JFrame implements ActionListener {
 
     // REQUIRES:
     // MODIFIES: this
-    // EFFECTS: creates jlabel and textfield to get the riskiness of a stock
+    // EFFECTS: creates JLabel and textfield to get the riskiness of a stock
     private void addInput4(Font font, Dimension dimension) {
         JLabel label;
         label = new JLabel("How risky is the stock from 1 - 5? (eg. 5 is riskiest, could lose or gain the most)");
@@ -433,14 +433,26 @@ public class GUI extends JFrame implements ActionListener {
             case "Exit application":
                 System.exit(0);
                 break;
-            case "Invest in Your Stocks Now":
-                investInStocksButtonPress();
+            case "Invest in Your Stocks Now": investInStocksButtonPress();
                 break;
-            case "Add Money to Portfolio Balance":
-                addBalanceButtonPress();
+            case "Add Money to Portfolio Balance": addBalanceButtonPress();
+                break;
+            case "Sell First Stock": sellFirstStock();
                 break;
         }
     }
+
+    private void sellFirstStock() {
+        if (portfolio.getPortfolioList().size() > 0) {
+            Stock stock = portfolio.getPortfolioList().get(0);
+            portfolio.sellStock(stock);
+
+            balance.setText("Your available balance is: $" + portfolio.getBalance());
+
+            stockList.setText(portfolio.getStocksAsString());
+        }
+    }
+
 
     // REQUIRES:
     // MODIFIES: this
@@ -566,7 +578,7 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    // REQUIRES:
+    // REQUIRES: Ensure textfields have proper formatting to be parsed into the correct field type in stock
     // MODIFIES: this
     // EFFECTS: actions for btton clicks in add stock menu
     //              - if Add Stock then it will add a new stock with fields parsed from textfields to portfolio

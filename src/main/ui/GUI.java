@@ -16,12 +16,15 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
+// GUI class: creates interactive graphical interface for a portfolio where you can buy and sell stocks
 public class GUI extends JFrame implements ActionListener {
     private static final String JSON_STORE = "./data/portfolio.json";
     private Portfolio portfolio;
 
     private JPanel mainMenu;
+    private JLabel balance;
     private JButton addMoneyButton;
     private JButton addStockButton;
     private JButton viewStocksButton;
@@ -31,6 +34,9 @@ public class GUI extends JFrame implements ActionListener {
     private JButton loadPortfolioButton;
     private JButton endButton;
 
+    private JPanel balanceMenu;
+    private JTextField balanceField;
+
     private JPanel addStockMenu;
     private JTextField stockTicker;
     private JTextField stockPriceCurrent;
@@ -38,6 +44,10 @@ public class GUI extends JFrame implements ActionListener {
     private JTextField risk;
 
     private JPanel viewStockMenu;
+
+    private JPanel investStocksMenu;
+    private ArrayList<JTextField> investTextFields;
+    private JTextField investDays;
 
     private JLabel stockList;
 
@@ -53,6 +63,9 @@ public class GUI extends JFrame implements ActionListener {
         initializeSubMenus();
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: creates the main menu ui and initializes a new portfolio
     public void initializeMainMenu() {
         portfolio = new Portfolio();
 
@@ -68,12 +81,22 @@ public class GUI extends JFrame implements ActionListener {
         setButtonAction();
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: adds welcome message and shows available balance on main menu using labels
     private void addHomeScreenLabel() {
         JLabel homeLabel = new JLabel("Hello, welcome to your stock portfolio");
         homeLabel.setFont(new Font("Georgia", Font.BOLD, 35));
         mainMenu.add(homeLabel);
+
+        balance = new JLabel(("Your available balance is: $" + portfolio.getBalance()));
+        balance.setFont(new Font("Georgia", Font.BOLD, 16));
+        mainMenu.add(balance);
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: creates all the menu buttons on the main menu
     private void createMenuButtons() {
         addMoneyButton = new JButton("Add Money to Portfolio Balance");
         addStockButton = new JButton("Add a New Stock");
@@ -85,6 +108,9 @@ public class GUI extends JFrame implements ActionListener {
         endButton = new JButton("Exit application");
     }
 
+    // REQUIRES:
+    // MODIFIES:
+    // EFFECTS: adds all the created buttons to the main menu
     private void addButtonsToMenu() {
         addButtonToMenu(addMoneyButton);
         addButtonToMenu(addStockButton);
@@ -96,6 +122,9 @@ public class GUI extends JFrame implements ActionListener {
         addButtonToMenu(endButton);
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: adds and formats a button to the mainMenu
     private void addButtonToMenu(JButton button) {
         button.setFont(new Font("Georgia", Font.BOLD, 12));
         button.setBackground((Color.BLACK));
@@ -107,6 +136,9 @@ public class GUI extends JFrame implements ActionListener {
 
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: sets the action listener and action command for all buttons on the main page
     private void setButtonAction() {
         addMoneyButton.addActionListener(this);
         addMoneyButton.setActionCommand("Add Money to Portfolio Balance");
@@ -133,14 +165,108 @@ public class GUI extends JFrame implements ActionListener {
         endButton.setActionCommand("Exit application");
     }
 
+    // REQUIRES:
+    // MODIFIES:
+    // EFFECTS: intializes all the sub menus
     private void initializeSubMenus() {
+        initializeBalanceMenu();
         initializeViewStockMenu();
         initializeAddStockMenu();
+        initializeInvestInStocks();
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: initializes the menu for adding balance to portfolio
+    //             - creates Jpanel, labels and buttons
+    private void initializeBalanceMenu() {
+        balanceMenu = new JPanel();
+
+        JLabel label = new JLabel("Enter amount of money to add to balance:");
+        label.setFont((new Font("Georgia", Font.BOLD, 12)));
+        balanceMenu.add(label);
+
+        balanceField = new JTextField(5);
+        balanceField.setMaximumSize(new Dimension(1200, 40));
+        balanceMenu.add(balanceField);
+
+        JButton addBalance = new JButton("Add Balance");
+        addBalance.setFont(new Font("Georgia", Font.BOLD, 12));
+        addBalance.setBackground((Color.BLACK));
+        balanceMenu.add(addBalance);
+        pack();
+        addBalance.setActionCommand("Add Balance");
+        addBalance.addActionListener(this);
+
+        JButton mainMenuButton = new JButton("Back to Main Menu");
+        mainMenuButton.setFont(new Font("Georgia", Font.BOLD, 12));
+        mainMenuButton.setBackground((Color.BLACK));
+        balanceMenu.add(mainMenuButton);
+        pack();
+        mainMenuButton.setActionCommand("Back to Main Menu");
+        mainMenuButton.addActionListener(this);
+    }
+
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: intializes menu for investing in the current stocks
+    //              - creates jpanel, fields, and buttons
+    public void initializeInvestInStocks() {
+        investStocksMenu = new JPanel();
+
+        investTextFields = createInvestFields();
+
+        JButton investStocksButton = new JButton("Invest Stocks");
+        investStocksButton.setFont(new Font("Georgia", Font.BOLD, 12));
+        investStocksButton.setBackground((Color.BLACK));
+        investStocksMenu.add(investStocksButton);
+        pack();
+        investStocksButton.setActionCommand("Invest Stocks");
+        investStocksButton.addActionListener(this);
+
+        JButton mainMenuButton = new JButton("Back to Main Menu");
+        mainMenuButton.setFont(new Font("Georgia", Font.BOLD, 12));
+        mainMenuButton.setBackground((Color.BLACK));
+        investStocksMenu.add(mainMenuButton);
+        pack();
+        mainMenuButton.setActionCommand("Back to Main Menu");
+        mainMenuButton.addActionListener(this);
+    }
+
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: for each stock in portfolio it will create a label and text field asking for amount to invest in
+    //              - also creates label and field for how many days to invest in all the stocks
+    private ArrayList<JTextField> createInvestFields() {
+        ArrayList<JTextField> labelList = new ArrayList<>();
+
+        for (Stock stock : portfolio.getPortfolioList()) {
+            JLabel label = new JLabel("How much would you like to invest int stock " + stock.getSymbol() + "?");
+            label.setFont(new Font("Georgia", Font.BOLD, 12));
+            JTextField textField = new JTextField(5);
+            textField.setMaximumSize(new Dimension(1200, 40));
+
+            investStocksMenu.add(label);
+            investStocksMenu.add(textField);
+
+            labelList.add(textField);
+        }
+        JLabel label1 = new JLabel("How many days would you like to invest these stocks for?");
+        label1.setFont(new Font("Georgia", Font.BOLD, 12));
+        investDays = new JTextField(5);
+        investDays.setMaximumSize(new Dimension(1200, 40));
+
+        investStocksMenu.add(label1);
+        investStocksMenu.add(investDays);
+        return labelList;
+    }
+
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: for each stock in portfolio it will create a label and text field asking for amount to invest in
+    //              - also creates label and field for how many days to invest in all the stocks
     private void initializeViewStockMenu() {
         viewStockMenu = new JPanel();
-       // viewStockMenu.setLayout(new BoxLayout(mainMenu, BoxLayout.Y_AXIS));
 
         JLabel title = new JLabel("Your Stocks:");
         title.setFont(new Font("Georgia", Font.BOLD, 20));
@@ -162,6 +288,10 @@ public class GUI extends JFrame implements ActionListener {
         toMenu.setActionCommand("Back to Main Menu");
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS:  Initializes the menu for adding stocks
+    //              - creates jpanel, input fields, add stock button, back to main menu button
     private void initializeAddStockMenu() {
         addStockMenu = new JPanel();
 
@@ -184,6 +314,10 @@ public class GUI extends JFrame implements ActionListener {
         mainMenuButton.addActionListener(this);
     }
 
+    // REQUIRES:
+    // MODIFIES:
+    // EFFECTS: adds input for each field for a stock
+    //              - gives all same font and dimension
     private void addInputFields() {
         Font font = new Font("Georgia", Font.BOLD, 12);
         Dimension dimension = new Dimension(1200, 40);
@@ -197,6 +331,10 @@ public class GUI extends JFrame implements ActionListener {
         addInput4(font, dimension);
     }
 
+
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: creates jlabel and textfield to get the riskiness of a stock
     private void addInput4(Font font, Dimension dimension) {
         JLabel label;
         label = new JLabel("How risky is the stock from 1 - 5? (eg. 5 is riskiest, could lose or gain the most)");
@@ -208,6 +346,9 @@ public class GUI extends JFrame implements ActionListener {
         addStockMenu.add(risk);
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: creates jlabel and textfield to get the marketcap of stock
     private void addInput3(Font font, Dimension dimension) {
         JLabel label = new JLabel("What is the market cap of this stock? (eg. AAPL: $2723000000000)");
         label.setFont(font);
@@ -218,6 +359,9 @@ public class GUI extends JFrame implements ActionListener {
         addStockMenu.add(marketCap);
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: creates jlabel and textfield to get the current stock price of stock
     private void addInput2(Font font, Dimension dimension) {
         JLabel label = new JLabel("What is the current stock price of this stock? (E.g. $135.37)");
         label.setFont(font);
@@ -228,6 +372,9 @@ public class GUI extends JFrame implements ActionListener {
         addStockMenu.add(stockPriceCurrent);
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: creates jlabel and textfield to get the symbol of the stock
     private void addInput1(Font font, Dimension dimension) {
         JLabel label = new JLabel("What is the ticker/symbol of the stock you would like to sell? (E.g. AAPL)");
         label.setFont(font);
@@ -238,14 +385,37 @@ public class GUI extends JFrame implements ActionListener {
         addStockMenu.add(stockTicker);
     }
 
-    // EFFECTS: calls methods when button pressed
+    // EFFECTS: calls methods when button pressed for each menu
     @Override
     public void actionPerformed(ActionEvent e) {
         mainMenuActions(e);
         viewStockMenuActions(e);
         addStockMenuActions(e);
+        investStocksMenuActions(e);
+        addBalanceMenuActions(e);
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: calls method given button pressed in add balance menu
+    //              - one button adds balance to portfolio
+    //              - one button returns to main menu
+    private void addBalanceMenuActions(ActionEvent e) {
+        if (e.getActionCommand().equals("Add Balance")) {
+            portfolio.setBalance(portfolio.getBalance() + Double.parseDouble(balanceField.getText()));
+            balance.setText("Your available balance is: $" + portfolio.getBalance());
+        } else if (e.getActionCommand().equals("Back to Main Menu")) {
+            mainMenu.setVisible(true);
+            viewStockMenu.setVisible(false);
+            addStockMenu.setVisible(false);
+            investStocksMenu.setVisible(false);
+            balanceMenu.setVisible(false);
+        }
+    }
+
+    // REQUIRES:
+    // MODIFIES:
+    // EFFECTS: calls methods for each button pressed in main Menu
     private void mainMenuActions(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Add a New Stock":
@@ -263,7 +433,73 @@ public class GUI extends JFrame implements ActionListener {
             case "Exit application":
                 System.exit(0);
                 break;
+            case "Invest in Your Stocks Now":
+                investInStocksButtonPress();
+                break;
+            case "Add Money to Portfolio Balance":
+                addBalanceButtonPress();
+                break;
         }
+    }
+
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: switches to add balance menu
+    private void addBalanceButtonPress() {
+        add(balanceMenu);
+        mainMenu.setVisible(false);
+        viewStockMenu.setVisible(false);
+        addStockMenu.setVisible(false);
+        investStocksMenu.setVisible(false);
+        balanceMenu.setVisible(true);
+    }
+
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: methods for button clicks in invest stock menu
+    //             - method for investing stocks
+    //             - returns back to main menu
+    private void investStocksMenuActions(ActionEvent e) {
+        if (e.getActionCommand().equals("Invest Stocks")) {
+            setInvestments();
+        } else if (e.getActionCommand().equals("Back to Main Menu")) {
+            mainMenu.setVisible(true);
+            viewStockMenu.setVisible(false);
+            addStockMenu.setVisible(false);
+            investStocksMenu.setVisible(false);
+            balanceMenu.setVisible(false);
+        }
+    }
+
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: switches to invest in stocks menu
+    private void investInStocksButtonPress() {
+        initializeInvestInStocks();
+        add(investStocksMenu);
+        mainMenu.setVisible(false);
+        viewStockMenu.setVisible(false);
+        addStockMenu.setVisible(false);
+        investStocksMenu.setVisible(true);
+        balanceMenu.setVisible(false);
+    }
+
+    // REQUIRES: the text in TextField can be parsed to be the correct type of field in stock
+    // MODIFIES: this
+    // EFFECTS: invests in each stock depending on what is entered in textFields, changes balance label
+    private void setInvestments() {
+        for (int i = 0; i < portfolio.getPortfolioList().size(); i++) {
+            Stock stock = portfolio.getPortfolioList().get(i);
+            stock.setCurrentInvestmentWorth(Double.parseDouble(investTextFields.get(i).getText()));
+            portfolio.subtractBalance(Double.parseDouble(investTextFields.get(i).getText()));
+
+            balance.setText("Your available balance is: $" + portfolio.getBalance());
+
+        }
+
+        portfolio.investStocksForDays(Integer.parseInt(investDays.getText()));
+
+        stockList.setText(portfolio.getStocksAsString());
     }
 
     // MODIFIES: this
@@ -292,28 +528,49 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: switches to addstock to portfolio menu
     private void addStockToPortfolioButtonPress() {
         add(addStockMenu);
         mainMenu.setVisible(false);
         viewStockMenu.setVisible(false);
         addStockMenu.setVisible(true);
+        investStocksMenu.setVisible(false);
+        balanceMenu.setVisible(false);
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: switches to view stocks menu
     private void viewStocksActionButtonPress() {
         add(viewStockMenu);
         mainMenu.setVisible(false);
         viewStockMenu.setVisible(true);
         addStockMenu.setVisible(false);
+        investStocksMenu.setVisible(false);
+        balanceMenu.setVisible(false);
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: actions for button clicks in view stock menu
+    //              - returns to main menu
     private void viewStockMenuActions(ActionEvent e) {
         if (e.getActionCommand().equals("Back to Main Menu")) {
             mainMenu.setVisible(true);
             viewStockMenu.setVisible(false);
             addStockMenu.setVisible(false);
+            investStocksMenu.setVisible(false);
+            balanceMenu.setVisible(false);
         }
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: actions for btton clicks in add stock menu
+    //              - if Add Stock then it will add a new stock with fields parsed from textfields to portfolio
+    //              - return to main menu button returns to main menu
     private void addStockMenuActions(ActionEvent e) {
         if (e.getActionCommand().equals("Add Stock")) {
             playSound("./data/CashRegister.wav");
@@ -330,9 +587,14 @@ public class GUI extends JFrame implements ActionListener {
             mainMenu.setVisible(true);
             viewStockMenu.setVisible(false);
             addStockMenu.setVisible(false);
+            investStocksMenu.setVisible(false);
+            balanceMenu.setVisible(false);
         }
     }
 
+    // REQUIRES:
+    // MODIFIES: this
+    // EFFECTS: converts Label string to one that has multiple lanes for formatiing
     public static String convertToMultiline(String orig) {
         return "<html>" + orig.replaceAll("\n", "<br/>") + "</html>";
     }

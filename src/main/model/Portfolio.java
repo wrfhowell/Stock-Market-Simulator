@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.NegativeDoubleException;
+import exceptions.NegativeIntException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -105,11 +107,13 @@ public class Portfolio implements Writable {
     // the total value currently invested in all stocks
     public void investStocksForDays(int days) {
         for (Stock i : portfolio) {
-            i.setDaysToInvest(days);
-
-            i.investIndividualStock();
+            try {
+                i.setDaysToInvest(days);
+                i.investIndividualStock();
+            } catch (NegativeIntException e) {
+                System.out.println("Can't have negative days");
+            }
         }
-
         updateValue();
     }
 
@@ -131,7 +135,12 @@ public class Portfolio implements Writable {
     //              - removes stock from portfolio
     public void sellStock(Stock stock) {
         double amountInvested = stock.getCurrentInvestmentWorth();
-        stock.setCurrentInvestmentWorth(0);
+
+        try {
+            stock.setCurrentInvestmentWorth(0);
+        } catch (NegativeDoubleException e) {
+            System.out.println("invested negative amount illegal");
+        }
 
         this.balance += amountInvested;
 

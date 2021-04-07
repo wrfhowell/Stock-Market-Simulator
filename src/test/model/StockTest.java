@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.*;
 import netscape.javascript.JSObject;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,14 +18,179 @@ class StockTest {
     }
 
     @Test
+    void testSetSymbolNoException() {
+        try {
+            testStock.setSymbol("GOOGL");
+            assertEquals("GOOGL", testStock.getSymbol());
+        } catch (TickerLengthException e) {
+            fail("should not have exception for ticker length");
+        } catch (NonCapLetterException e) {
+            fail("should not have exception noncapletter");
+        }
+    }
+
+    @Test
+    void testSetSymbolLengthException() {
+        try {
+            testStock.setSymbol("GOOGLE");
+            fail("Length exception");
+        } catch (TickerLengthException e) {
+            assertEquals("AAPL", testStock.getSymbol());
+        } catch (NonCapLetterException e) {
+            fail("should not have exception noncapletter");
+        }
+    }
+
+    @Test
+    void testSetSymbolLetterException() {
+        try {
+            testStock.setSymbol("GGoL");
+            fail("Letter expception");
+        } catch (TickerLengthException e) {
+            fail("should not have exception for ticker length");
+        } catch (NonCapLetterException e) {
+            assertEquals("AAPL", testStock.getSymbol());
+        }
+    }
+
+    @Test
+    void setStockPriceCurrentNoException() {
+        try {
+            testStock.setStockPriceCurrent(350.47);
+            assertEquals(350.47, testStock.getStockPriceCurrent());
+        } catch (NegativeDoubleException e) {
+            fail("Should not have exception");
+        }
+    }
+
+    @Test
+    void setStockPriceCurrentException() {
+        try {
+            testStock.setStockPriceCurrent(-154.67);
+            fail("Should have exception");
+        } catch (NegativeDoubleException e) {
+            assertEquals(123, testStock.getStockPriceCurrent());
+        }
+    }
+
+    @Test
+    void testSetCurrentInvestmentWorthValid() {
+        try {
+            testStock.setCurrentInvestmentWorth(1000);
+            assertEquals(1000, testStock.getCurrentInvestmentWorth());
+        } catch (NegativeDoubleException e) {
+            fail("Should not catch exceptions");
+        }
+    }
+
+    @Test
+    void testSetCurrentInvestmentWorthInvalid() {
+        try {
+            testStock.setCurrentInvestmentWorth(-400);
+            fail("Should catch exceptions");
+        } catch (NegativeDoubleException e) {
+            assertEquals(500, testStock.getCurrentInvestmentWorth());
+        }
+    }
+
+    @Test
+    void testSetDaysToInvestValid() {
+        try {
+            testStock.setDaysToInvest(2);
+            assertEquals(2, testStock.getDaysToInvest());
+        } catch (NegativeIntException e) {
+            fail("No excpetion should be thrown");
+        }
+    }
+
+    @Test
+    void testSetDaysToInvestInvalid() {
+        try {
+            testStock.setDaysToInvest(-1);
+            fail("Exception should be thrown");
+        } catch (NegativeIntException e) {
+            assertEquals(1, testStock.getDaysToInvest());
+        }
+    }
+
+    @Test
+    void testSetMarketCapValid() {
+        try {
+            testStock.setMarketCap(450000000);
+            assertEquals(450000000, testStock.getMarketCap());
+        } catch (NegativeDoubleException e) {
+            fail("Should not catch any exception here");
+        }
+    }
+
+    @Test
+    void testSetMarketCapInvalid() {
+        try {
+            testStock.setMarketCap(-500040030);
+            fail("Should catch exception here");
+        } catch (NegativeDoubleException e) {
+            assertEquals(1000000, testStock.getMarketCap());
+        }
+    }
+
+    @Test
+    void testSetRiskValid() {
+        try {
+            testStock.setRisk(1);
+            testStock.setRisk(2);
+            testStock.setRisk(3);
+            testStock.setRisk(4);
+            testStock.setRisk(5);
+            assertEquals(5, testStock.getRisk());
+        } catch (RiskOutOfBoundaryException e) {
+            fail("should not catch exception");
+        }
+    }
+
+    @Test
+    void testSetRiskInvalidHigher() {
+        try {
+            testStock.setRisk(6);
+            fail("should  catch exception");
+        } catch (RiskOutOfBoundaryException e) {
+            assertEquals(3, testStock.getRisk());
+        }
+    }
+
+    @Test
+    void testSetRiskInvalidLower() {
+        try {
+            testStock.setRisk(0);
+            fail("should  catch exception");
+        } catch (RiskOutOfBoundaryException e) {
+            assertEquals(3, testStock.getRisk());
+        }
+    }
+
+    @Test
     void testGetDaysToInvest() {
         assertEquals(1, testStock.getDaysToInvest());
     }
 
     @Test
     void testAddInvestmentAmount() {
-        testStock.addInvestmentAmount(150);
-        assertEquals(650, testStock.getCurrentInvestmentWorth());
+        try {
+            testStock.addInvestmentAmount(150);
+            assertEquals(650, testStock.getCurrentInvestmentWorth());
+        } catch (NegativeDoubleException e) {
+            fail("No exception should be thrown here");
+        }
+    }
+
+    @Test
+    void testAddInvestmentAmountNegative() {
+        try {
+            testStock.addInvestmentAmount(-150);
+            fail("Exception should be thrown");
+        } catch (NegativeDoubleException e) {
+            assertEquals(500, testStock.getCurrentInvestmentWorth());
+        }
+
     }
 
     @Test
@@ -96,10 +262,11 @@ class StockTest {
     @Test
     void testInvestIndividualStockBelowZero() {
         for (int i = 0; i < 20; i++) {
-            runBefore();
+            testStock = new Stock("AAPL", -10000000, 123, 500,
+                    500, (500 / 123), 1, 3, 1000000);
 
             testStock.setDaysToInvest(1);
-            testStock.setStockPriceCurrent(-100000.00);
+
             testStock.investIndividualStock();
 
             assertEquals(0, testStock.getStockPriceCurrent());

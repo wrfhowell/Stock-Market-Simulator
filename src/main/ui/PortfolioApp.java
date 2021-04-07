@@ -1,5 +1,9 @@
 package ui;
 
+import exceptions.NegativeDoubleException;
+import exceptions.NonCapLetterException;
+import exceptions.RiskOutOfBoundaryException;
+import exceptions.TickerLengthException;
 import model.Portfolio;
 import model.Stock;
 
@@ -171,7 +175,13 @@ public class PortfolioApp {
             System.out.println("Must be all capital letters.");
             ticker = input.next();
         }
-        stock.setSymbol(ticker);
+        try {
+            stock.setSymbol(ticker);
+        } catch (NonCapLetterException exception) {
+            System.out.println("Only capital letters allowed");
+        } catch (TickerLengthException exception) {
+            System.out.println("Invalid symbol: longer than 5 characters");
+        }
     }
 
     // EFFECTS: asks user for stock price
@@ -185,8 +195,12 @@ public class PortfolioApp {
             System.out.println("Input positive number.");
             stockPrice = input.nextDouble();
         }
+        try {
+            stock.setStockPriceCurrent(stockPrice);
+        } catch (NegativeDoubleException exception) {
+            System.out.println("Negative stock price is invalid");
+        }
 
-        stock.setStockPriceCurrent(stockPrice);
     }
 
     //EFFECTS: asks user for marketCap of stock
@@ -201,7 +215,12 @@ public class PortfolioApp {
             marketCap = input.nextDouble();
         }
 
-        stock.setMarketCap(marketCap);
+        try {
+            stock.setMarketCap(marketCap);
+
+        } catch (NegativeDoubleException e) {
+            System.out.println("Input positive number for marketcap");
+        }
     }
 
     //EFFECTS: asks user for how risk the stock is
@@ -212,12 +231,15 @@ public class PortfolioApp {
                 "How risky is the stock from 1 - 5? (eg. 5 is riskiest, could lose or gain the most)");
         int riskFactor = input.nextInt();
 
-        while (riskFactor < 1 | riskFactor > 5) {
+        while (riskFactor < 1 || riskFactor > 5) {
             System.out.println("Input integer from between 1 and 5.");
             riskFactor = input.nextInt();
         }
-
-        stock.setRisk(riskFactor);
+        try {
+            stock.setRisk(riskFactor);
+        } catch (RiskOutOfBoundaryException e) {
+            System.out.println("Risk outside of 1 - 5 boundary");
+        }
     }
 
     // MODIFIES: this
@@ -238,9 +260,12 @@ public class PortfolioApp {
                 System.out.println("Not enough money in portfolio");
                 return;
             }
-
-            i.setCurrentInvestmentWorth(amount);
-            portfolio.subtractBalance(amount);
+            try {
+                i.setCurrentInvestmentWorth(amount);
+                portfolio.subtractBalance(amount);
+            } catch (NegativeDoubleException e) {
+                System.out.println("Cannot set negative amount to invest");
+            }
         }
         System.out.println("For how many days would you like to invest?");
         int days = input.nextInt();
@@ -279,7 +304,11 @@ public class PortfolioApp {
             System.out.println("How much would you like to invest?");
             double amount = input.nextInt();
 
-            stock.addInvestmentAmount(amount);
+            try {
+                stock.addInvestmentAmount(amount);
+            } catch (NegativeDoubleException e) {
+                System.out.println("Inputted negative number");
+            }
         }
     }
 

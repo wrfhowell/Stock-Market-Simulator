@@ -1,28 +1,28 @@
 {
-    "balance": 2000,
-    "value currently invested": 0,
+    "balance": 300,
+    "value currently invested": 976.7907833417019,
     "portfolio": [
         {
-            "stock price previous": 0,
+            "stock price previous": 135.57,
             "symbol": "AAPL",
-            "shares bought": 0,
-            "current investment worth": 0,
-            "days to invest": 0,
-            "risk": 4,
-            "initial investment": 0,
-            "stock price current": 135.57,
-            "market cap": 2.34234234E8
+            "shares bought": 3.688131592535222,
+            "current investment worth": 425.62868144787666,
+            "days to invest": 4,
+            "risk": 2,
+            "initial investment": 500,
+            "stock price current": 115.40496068777726,
+            "market cap": 2.723E9
         },
         {
-            "stock price previous": 0,
+            "stock price previous": 340.45,
             "symbol": "GME",
-            "shares bought": 0,
-            "current investment worth": 0,
-            "days to invest": 0,
-            "risk": 2,
-            "initial investment": 0,
-            "stock price current": 12.37,
-            "market cap": 2.34234234E8
+            "shares bought": 2.0561022176531063,
+            "current investment worth": 551.1621018938253,
+            "days to invest": 4,
+            "risk": 5,
+            "initial investment": 700,
+            "stock price current": 268.0616251282183,
+            "market cap": 5.0E9
         }
     ]
 }

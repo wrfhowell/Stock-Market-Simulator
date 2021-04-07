@@ -1,5 +1,9 @@
 package ui;
 
+import exceptions.NegativeDoubleException;
+import exceptions.NonCapLetterException;
+import exceptions.RiskOutOfBoundaryException;
+import exceptions.TickerLengthException;
 import model.Portfolio;
 import model.Stock;
 import persistence.JsonReader;
@@ -22,6 +26,8 @@ import java.util.ArrayList;
 public class GUI extends JFrame implements ActionListener {
     private static final String JSON_STORE = "./data/portfolio.json";
     private Portfolio portfolio;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     private JPanel mainMenu;
     private JLabel balance;
@@ -210,7 +216,7 @@ public class GUI extends JFrame implements ActionListener {
     // REQUIRES:
     // MODIFIES: this
     // EFFECTS: intializes menu for investing in the current stocks
-    //              - creates jp anel, fields, and buttons
+    //              - creates jpanel, fields, and buttons
     public void initializeInvestInStocks() {
         investStocksMenu = new JPanel();
 
@@ -502,9 +508,12 @@ public class GUI extends JFrame implements ActionListener {
     private void setInvestments() {
         for (int i = 0; i < portfolio.getPortfolioList().size(); i++) {
             Stock stock = portfolio.getPortfolioList().get(i);
-            stock.setCurrentInvestmentWorth(Double.parseDouble(investTextFields.get(i).getText()));
-            portfolio.subtractBalance(Double.parseDouble(investTextFields.get(i).getText()));
-
+            try {
+                stock.setCurrentInvestmentWorth(Double.parseDouble(investTextFields.get(i).getText()));
+                portfolio.subtractBalance(Double.parseDouble(investTextFields.get(i).getText()));
+            } catch (NegativeDoubleException e) {
+                System.out.println("cannot invest negative amount");
+            }
             balance.setText("Your available balance is: $" + portfolio.getBalance());
 
         }
@@ -518,7 +527,7 @@ public class GUI extends JFrame implements ActionListener {
     // EFFECTS: loads portfolio from file
     private void loadPortfolio() {
         try {
-            JsonReader jsonReader = new JsonReader(JSON_STORE);
+            jsonReader = new JsonReader(JSON_STORE);
             portfolio = jsonReader.read();
             System.out.println("Loaded portfolio saved at " + JSON_STORE);
             stockList.setText(portfolio.getStocksAsString());
@@ -530,7 +539,7 @@ public class GUI extends JFrame implements ActionListener {
     // EFFECTS: saves the portfolio to file in data folder
     private void savePortfolio() {
         try {
-            JsonWriter jsonWriter = new JsonWriter(JSON_STORE);
+            jsonWriter = new JsonWriter(JSON_STORE);
             jsonWriter.open();
             jsonWriter.write(portfolio);
             jsonWriter.close();
@@ -587,21 +596,33 @@ public class GUI extends JFrame implements ActionListener {
         if (e.getActionCommand().equals("Add Stock")) {
             playSound("./data/CashRegister.wav");
             Stock stock = new Stock();
-            stock.setSymbol(stockTicker.getText());
-            stock.setStockPriceCurrent(Double.parseDouble(stockPriceCurrent.getText()));
-            stock.setMarketCap(Double.parseDouble(marketCap.getText()));
-            stock.setRisk(Integer.parseInt(risk.getText()));
-
-            portfolio.addStock(stock);
-
-            stockList.setText(portfolio.getStocksAsString());
+            try {
+                stock.setSymbol(stockTicker.getText());
+                stock.setStockPriceCurrent(Double.parseDouble(stockPriceCurrent.getText()));
+                stock.setMarketCap(Double.parseDouble(marketCap.getText()));
+                stock.setRisk(Integer.parseInt(risk.getText()));
+                portfolio.addStock(stock);
+                stockList.setText(portfolio.getStocksAsString());
+            } catch (NonCapLetterException exception) {
+                System.out.println("Only capital letters allowed");
+            } catch (TickerLengthException exception) {
+                System.out.println("Invalid symbol: longer than 5 characters");
+            } catch (NegativeDoubleException exception) {
+                System.out.println("Negative values not allowed");
+            } catch (RiskOutOfBoundaryException exception) {
+                System.out.println("Risk outside of boundary 1-5");
+            }
         } else if (e.getActionCommand().equals("Back to Main Menu")) {
-            mainMenu.setVisible(true);
-            viewStockMenu.setVisible(false);
-            addStockMenu.setVisible(false);
-            investStocksMenu.setVisible(false);
-            balanceMenu.setVisible(false);
+            mainMenuVisibility();
         }
+    }
+
+    private void mainMenuVisibility() {
+        mainMenu.setVisible(true);
+        viewStockMenu.setVisible(false);
+        addStockMenu.setVisible(false);
+        investStocksMenu.setVisible(false);
+        balanceMenu.setVisible(false);
     }
 
     // REQUIRES:
@@ -616,7 +637,9 @@ public class GUI extends JFrame implements ActionListener {
     public void playSound(String soundName) {
         try {
             Clip clip = AudioSystem.getClip();
+
             AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(soundName));
+            
             clip.open(inputStream);
             clip.start();
         } catch (Exception e) {

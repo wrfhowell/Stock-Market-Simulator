@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.*;
 import org.json.JSONObject;
 import persistence.Writable;
 
@@ -37,6 +38,7 @@ public class Stock implements Writable {
         this.marketCap = 10000000;
     }
 
+    // Not robust as only used in testing purposes for intentionally setting a wide range of values
     public Stock(String symbol, double stockPriceCurrent, double stockPricePrevious, double currentInvestmentWorth,
                  double initialInvestment, double sharesBought, int daysToInvest, int risk, double marketCap) {
         this.symbol = symbol;
@@ -89,40 +91,70 @@ public class Stock implements Writable {
 
 
     //Setters:
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
+    public void setSymbol(String symbol) throws TickerLengthException, NonCapLetterException {
+        if (symbol.length() > 5) {
+            throw new TickerLengthException();
+        } else if (!symbol.matches("[A-Z]+")) {
+            throw new NonCapLetterException();
+        } else {
+            this.symbol = symbol;
+        }
     }
 
-    public void setStockPriceCurrent(double price) {
-        this.stockPriceCurrent = price;
+    public void setStockPriceCurrent(double price) throws NegativeDoubleException {
+        if (price < 0) {
+            throw new NegativeDoubleException();
+        } else {
+            this.stockPriceCurrent = price;
+        }
     }
 
     public void setStockPricePrevious(double price) {
         this.stockPricePrevious = price;
     }
 
-    public void setCurrentInvestmentWorth(double amount) {
-        this.currentInvestmentWorth = amount;
+    public void setCurrentInvestmentWorth(double amount) throws NegativeDoubleException {
+        if (amount < 0) {
+            throw new NegativeDoubleException();
+        } else {
+            this.currentInvestmentWorth = amount;
+        }
     }
 
-    public void setDaysToInvest(int days) {
-        this.daysToInvest = days;
+    public void setDaysToInvest(int days) throws NegativeDoubleException {
+        if (days < 0) {
+            throw new NegativeIntException();
+        } else {
+            this.daysToInvest = days;
+        }
     }
 
-    public void setMarketCap(double marketCap) {
-        this.marketCap = marketCap;
+    public void setMarketCap(double marketCap) throws NegativeDoubleException {
+        if (marketCap < 0) {
+            throw new NegativeDoubleException();
+        } else {
+            this.marketCap = marketCap;
+        }
     }
 
     public void setRisk(int risk) {
-        this.risk = risk;
+        if (risk < 1 || risk > 5) {
+            throw new RiskOutOfBoundaryException();
+        } else {
+            this.risk = risk;
+        }
     }
 
     //Methods:
 
     // MODIFIES: this
     // EFFECTS: increases current investment in stock by inputted amount
-    public void addInvestmentAmount(double amount) {
-        currentInvestmentWorth += amount;
+    public void addInvestmentAmount(double amount) throws NegativeDoubleException {
+        if (amount < 0) {
+            throw new NegativeDoubleException();
+        } else {
+            currentInvestmentWorth += amount;
+        }
     }
 
     // MODIFIES: this
@@ -137,6 +169,7 @@ public class Stock implements Writable {
         for (int i = 0; i < daysToInvest; i++) {
 
             double riskFactor = getRiskFactor();
+
             double max = stockPriceCurrent + (stockPriceCurrent * riskFactor);
 
             if (max > marketCap) {
@@ -156,7 +189,7 @@ public class Stock implements Writable {
 
     }
 
-    // EFFECTS: returns a riskFactor based on the amount of risk the stock has. More risk factor for riskier stock
+    // EFFECTS: returns a riskFactor based on the amount of risk the stock has. More risk factor for riskier stock.
     public double getRiskFactor() {
         if (risk == 1) {
             return 0.05;
